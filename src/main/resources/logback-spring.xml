@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!-- 定义日志文件名 -->
+    <property name="LOG_FILE" value="spring-boot-example"/>
+    <!-- 定义日志文件路径 -->
+    <!-- 输出到工程的根目录下的 logs 文件夹 -->
+    <property name="LOCAL_LOG_DIR" value="logs"/>
+    <!-- 输出到服务器的路径 -->
+    <property name="DEV_LOG_DIR" value="${LOCAL_LOG_DIR}"/>
+    <!-- 输出到服务器的路径 -->
+    <property name="STG_LOG_DIR" value="/usr/local/var/logs"/>
+    <!-- 输出到服务器的路径 -->
+    <property name="PROD_LOG_DIR" value="/usr/local/var/logs"/>
+
+    <!-- 标准输出日志格式(Log file)因为带颜色的日志在file上很难看 TODO-->
+    <property name="STDOUT_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%F]%M(%L) : %m%n"/>
+
+    <appender name="STDOUT-LOG" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%F]%M(%L) : %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 彩色日志(Local console) -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <appender name="CONSOLE-LOG" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </layout>
+    </appender>
+
+    <!-- 定义日志格式 -->
+    <property name="LOG_FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%t] [%c{1}] - %m%n"/>
+
+    <!--针对local环境下的日志配置-->
+    <springProfile name="local">
+        <logger name="com.example.demo" level="DEBUG"/>
+        <!-- 定义日志文件路径 -->
+        <property name="LOG_DIR" value="${LOCAL_LOG_DIR}"/>
+        <!-- 定义日志文件名 -->
+        <property name="LOG_FILE" value="${LOG_FILE}-local.log"/>
+    </springProfile>
+
+    <!--针对dev环境下的日志配置-->
+    <springProfile name="dev">
+        <logger name="com.example.demo" level="DEBUG"/>
+        <!-- 定义日志文件路径 -->
+        <property name="LOG_DIR" value="${DEV_LOG_DIR}"/>
+        <!-- 定义日志文件名 -->
+        <property name="LOG_FILE" value="${LOG_FILE}-dev.log"/>
+    </springProfile>
+
+    <!--针对stg环境下的日志配置-->
+    <springProfile name="stg">
+        <logger name="com.example.demo" level="INFO"/>
+        <!-- 定义日志文件路径 -->
+        <property name="LOG_DIR" value="${STG_LOG_DIR}"/>
+        <!-- 定义日志文件名 -->
+        <property name="LOG_FILE" value="${LOG_FILE}-stg.log"/>
+    </springProfile>
+
+    <!--针对prod环境下的日志配置-->
+    <springProfile name="prod">
+        <root level="WARN"/>
+        <!-- 定义日志文件路径 -->
+        <property name="LOG_DIR" value="${PROD_LOG_DIR}"/>
+        <!-- 定义日志文件名 -->
+        <property name="LOG_FILE" value="${LOG_FILE}.log"/>
+    </springProfile>
+
+    <!-- 定义输出到文件的 appender -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_DIR}/${LOG_FILE}</file>
+        <encoder>
+            <pattern>${LOG_FILE_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.springframework" level="INFO">
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="com.example.demo" level="INFO">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <root level="INFO">
+        <!--        <appender-ref ref="STDOUT-LOG"/>-->
+        <appender-ref ref="CONSOLE-LOG"/>
+        <!-- 将 ROOT logger 配置为输出到文件 -->
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
