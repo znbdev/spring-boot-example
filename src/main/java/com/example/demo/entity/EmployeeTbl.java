@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "employee_tbl")
-public class EmployeeTbl extends AbstractEntity {
+public class EmployeeTbl extends CommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 @MappedSuperclass
-public class AbstractEntity implements Serializable {
+public class CommonEntity implements Serializable {
 
     @Column(name = "create_date", nullable = false, updatable = false)
     private Timestamp createDate;
