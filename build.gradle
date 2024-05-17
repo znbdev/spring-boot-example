@@ -14,6 +14,7 @@ java {
 
 ext {
     springbootVersion = '3.2.5'
+    lombokVersion = '1.18.22'
     mysqlVersion = '8.0.33'
 }
 
@@ -22,18 +23,25 @@ repositories {
 }
 
 dependencies {
+
+    // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter'
+    // Spring Data JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    // MySQL connector
     implementation "mysql:mysql-connector-java:${mysqlVersion}"
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    // H2 database
     runtimeOnly 'com.h2database:h2'
     // Test dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // JUnit 5
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-//    testImplementation 'com.h2database:h2'
+    // For testing Lombok
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 }
 
 tasks.named('test') {
