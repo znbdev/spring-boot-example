@@ -55,50 +55,56 @@ public class PDFBoxUtil {
     }
 
     public void fillPdfWithVariables(String sourcePdfFilePath, String destinationPdfFilePath, Map<String, String> variableMap, String imagePath) throws IOException {
-        try (PDDocument document = PDDocument.load(new File(sourcePdfFilePath))) {
-            PDPage page = document.getPage(0); // 获取第一页
+        PDDocument document = PDDocument.load(new File(sourcePdfFilePath));
+        document.setAllSecurityToBeRemoved(true); // 移除加密
 
-            // 获取页面尺寸
-            PDRectangle pageSize = page.getMediaBox();
+        PDPage page = document.getPage(0); // 获取第一页
 
-            // 创建页面内容流
-            PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true);
+        // 获取页面尺寸
+        PDRectangle pageSize = page.getMediaBox();
 
-            // 设置字体和字号
-            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+        // 创建页面内容流
+        PDPageContentStream contentStream = new PDPageContentStream(document, page, AppendMode.APPEND, true);
+
+        // 设置字体和字号
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
 
 
-            float textX = pageSize.getWidth() - 500;
-            float textY = pageSize.getHeight() - 300;
+        float textX = pageSize.getWidth() - 500;
+        float textY = pageSize.getHeight() - 300;
 
-            int i = 1;
-            // 填写变量信息到页面
-            for (Map.Entry<String, String> entry : variableMap.entrySet()) {
-                String variableName = entry.getKey();
-                String variableValue = entry.getValue();
-                contentStream.beginText();
-                float y = textY - 30 * i;
-                log.info("variableName:{}, variableValue:{}, x:{}, y:{}", variableName, variableValue, textX, y);
-                contentStream.newLineAtOffset(textX, y); // 修改为合适的坐标
-                contentStream.showText(variableValue);
-                contentStream.endText();
-                i++;
-            }
-
-            // 添加印章图像到页面
-            PDImageXObject image = PDImageXObject.createFromFile(imagePath, document);
-            float imageWidth = 30; // 图像宽度
-            float imageHeight = 30; // 图像高度
-            float imageX = pageSize.getWidth() - 100; // 图像 X 坐标
-            float imageY = pageSize.getHeight() - 400; // 图像 Y 坐标
-            contentStream.drawImage(image, imageX, imageY, imageWidth, imageHeight);
-            // 关闭页面内容流
-            contentStream.close();
-
-            // 保存填充后的 PDF 文件
-            document.save(new File(destinationPdfFilePath));
-            log.info("PDF 文件已创建成功！{}", destinationPdfFilePath);
+        int i = 1;
+        // 填写变量信息到页面
+        for (Map.Entry<String, String> entry : variableMap.entrySet()) {
+            String variableName = entry.getKey();
+            String variableValue = entry.getValue();
+            contentStream.beginText();
+            float y = textY - 30 * i;
+            log.info("variableName:{}, variableValue:{}, x:{}, y:{}", variableName, variableValue, textX, y);
+            contentStream.newLineAtOffset(textX, y); // 修改为合适的坐标
+            contentStream.showText(variableValue);
+            contentStream.endText();
+            i++;
         }
+
+        // 添加印章图像到页面
+        float imageX = 288; // 图像 X 坐标
+        float imageY = 337; // 图像 Y 坐标
+        addSealImage(document, imagePath, imageX, imageY, contentStream);
+
+        // 关闭页面内容流
+        contentStream.close();
+
+        // 保存填充后的 PDF 文件
+        document.save(new File(destinationPdfFilePath));
+        log.info("PDF 文件已创建成功！{}", destinationPdfFilePath);
+    }
+
+    private static void addSealImage(PDDocument document, String imagePath, float imageX, float imageY, PDPageContentStream contentStream) throws IOException {
+        PDImageXObject image = PDImageXObject.createFromFile(imagePath, document);
+        float imageWidth = 26; // 图像宽度
+        float imageHeight = 26; // 图像高度
+        contentStream.drawImage(image, imageX, imageY, imageWidth, imageHeight);
     }
 
 }
