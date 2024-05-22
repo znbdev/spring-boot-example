@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class EnvProperties {
+public class AppProperties {
     @Value("${info.env}")
     private String env;
+    @Value("${tmp.dir}")
+    private String tmpDir;
 }

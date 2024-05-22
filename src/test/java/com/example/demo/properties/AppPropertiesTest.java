@@ -11,15 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-class EnvPropertiesTest {
+class AppPropertiesTest {
 
     @Autowired
-    private EnvProperties envProperties;
+    private AppProperties appProperties;
 
     @Test
-    void testEnvProperty() {
-        String env = envProperties.getEnv();
-        log.info("envProperties: {}", env);
+    void testAppProperty() {
+        String env = appProperties.getEnv();
+        log.info("AppProperties env: {}", env);
         // 验证属性注入是否正确
         assertEquals("test", env);
     }
