@@ -33,7 +33,7 @@ cd [target repository dir]
 mvn clean install -Dmaven.test.skip -Dcheckstyle.skip
 ```
 
-### Run application
+### Run application on terminal or command line interface (CLI)
 
 ```bash
 java -jar target/spring-boot-example-0.0.1-SNAPSHOT.jar --spring.profiles.active=local --server.port=8080
