@@ -16,6 +16,7 @@ ext {
     springbootVersion = '3.2.5'
     lombokVersion = '1.18.22'
     mysqlVersion = '8.0.33'
+    pdfboxVersion = '2.0.26'
 }
 
 repositories {
@@ -35,6 +36,8 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     // H2 database
     runtimeOnly 'com.h2database:h2'
+    // PDFBox
+    implementation "org.apache.pdfbox:pdfbox:${pdfboxVersion}"
     // Test dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // JUnit 5

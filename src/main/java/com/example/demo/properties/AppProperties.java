@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class AppProperties {
-    @Value("${info.env}")
+    @Value("${info.env:local}")
     private String env;
-    @Value("${tmp.dir}")
+    @Value("${tmp.dir:tmp}")
     private String tmpDir;
 }
